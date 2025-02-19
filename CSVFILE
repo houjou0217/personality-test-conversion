@@ -1,0 +1,7 @@
+input_csv = "/Users/shinnosuke/Downloads/exported_results_1739928610.csv"
+quiz_category_csv = "output/quiz_category.csv"  # クイズカテゴリファイル
+
+columns_to_remove = ["IP Address", "Page URL", "User Email","name", "email", "comp", "phone", 
+                        "Total Correct", "Total Questions", "Score",
+                        "Question Right or Wrong", "Question Points Earned",
+                        "Question Category"]
