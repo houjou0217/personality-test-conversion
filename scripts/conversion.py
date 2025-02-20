@@ -1,30 +1,42 @@
 import pandas as pd
 import os
+from dotenv import load_dotenv
+load_dotenv(dotenv_path='/.env')
 
-input_csv = "/Users/shinnosuke/Downloads/exported_results_1739928610.csv"
+#==========================================
+
+def get_file_name_keep(input_csv):
+    df = pd.read_csv(input_csv)
+    output_file_name = df['Quiz/Survey'].dropna().unique()[0] if 'Quiz/Survey' in df.columns else "formatted_output"
+    return output_file_name
+
+#==========================================
+
 output_folder = "output"
-quiz_category_csv = "output/Quiz-Category.csv"
+output_quiz_category_file_name = "Quiz-Category.csv"
+input_csv = os.getenv('CSV_FILE_PATH')
+output_file_name = get_file_name_keep(input_csv)
 
-#=======================================問題抽出、分類プロセス===================================
+#=========== 📙問題、カテゴリ分類 ==============
 
-def process_question_category(input_csv, output_folder):
+
+def process_question_category(input_csv, output_folder, output_quiz_category_file_name):
     df = pd.read_csv(input_csv)
     # Question Title が NaN の行を削除
     df_questions = df.dropna(subset=["Question Title"])
     df_quiz_category = df_questions[["Question Title", "Question Category"]].drop_duplicates().reset_index(drop=True)
     df_quiz_category.insert(0, "ID", range(1, len(df_quiz_category) + 1))
-    
     os.makedirs(output_folder, exist_ok=True)
-    quiz_category_file_path = os.path.join(output_folder, "Quiz-Category.csv")
+    quiz_category_file_path = os.path.join(output_folder, output_quiz_category_file_name)
     df_quiz_category.to_csv(quiz_category_file_path, index=False, encoding='utf-8-sig')
-    
     print(f"✅ outputのファイルパス : {quiz_category_file_path}")
     
-process_question_category(input_csv, output_folder)
+process_question_category(input_csv, output_folder, output_quiz_category_file_name)
 
-#==========================================性格診断CSV 修正プロセス=====================================================
 
-def process_and_format_csv(input_csv, quiz_category_csv, output_folder):
+#========= 📙性格診断CSV修正 =================
+
+def process_and_format_csv(input_csv, quiz_category_csv, output_folder, output_file_name):
     df = pd.read_csv(input_csv)
     df_quiz_category = pd.read_csv(quiz_category_csv)
     df['Timestamp'] = pd.to_datetime(df['Timestamp'], errors='coerce')
@@ -44,15 +56,8 @@ def process_and_format_csv(input_csv, quiz_category_csv, output_folder):
     df = df.merge(df_quiz_category[['ID', 'Question Title']], on='Question Title', how='left')
     df.rename(columns={'ID': 'result_id'}, inplace=True)
     
-    # 出力ファイル名を Quiz/Survey の値にする（削除されるため事前に取得）
-    output_file_name = df['Quiz/Survey'].dropna().unique()[0] if 'Quiz/Survey' in df.columns else "formatted_output"
-    
-    # Quiz/Survey カラムを削除
-    if 'Quiz/Survey' in df.columns:
-        df.drop(columns=['Quiz/Survey'], inplace=True)
-    
     # 不要なカラムの削除
-    columns_to_remove = ["IP Address", "Page URL", "User Email","name", "email", "comp", "phone", 
+    columns_to_remove = ["Page URL" , "User Name" , "email", "comp", "phone", "Quiz/Survey",
                         "Total Correct", "Total Questions", "Score",
                         "Question Right or Wrong", "Question Points Earned",
                         "Question Category"]
@@ -70,8 +75,8 @@ def process_and_format_csv(input_csv, quiz_category_csv, output_folder):
     df.to_csv(output_file_path, index=False, encoding='utf-8-sig')
     
     print(f"✅ CSV整形後のファイルパス : {output_file_path}")
-
-process_and_format_csv(input_csv, quiz_category_csv, output_folder)
+    
+process_and_format_csv(input_csv, output_quiz_category_file_name, output_folder, output_file_name)
 
 #==========================================性格診断CSV 整形プロセス=====================================================
 
@@ -123,7 +128,6 @@ def process_and_format_csv(input_csv, quiz_category_csv, output_folder):
     print(f"Processed file saved to {output_file_path}")
 
 # 使用例
-input_conversion_csv = "output/202405_JPNAVI性格診断テスト.csv"  # 読み取るCSVファイル名
+input_conversion_csv = output_file_path # 読み取るCSVファイル名
 quiz_category_csv = "output/Quiz-Category.csv"  # クイズカテゴリファイル
-output_folder = "output"  # 出力フォルダ
 process_and_format_csv(input_conversion_csv, quiz_category_csv, output_folder)
