@@ -3,4 +3,4 @@
 
 # /scripts/takakota.py で実行します
  * input_csvでQSMからエクスポートしたファイルのファイルパスを挿入
- * /output/output_csv outcsv { num }.csv  numの値は3~
+ * /output/output_csv outcsv { filename }.csv  自動でQuiz／Serveyからfilenameを取得します 
