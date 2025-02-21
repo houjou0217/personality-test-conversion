@@ -80,7 +80,7 @@ process_and_format_csv(input_csv, output_quiz_category_file_name, output_folder,
 
 #==========================================性格診断CSV 整形プロセス=====================================================
 
-def process_and_format_csv(input_csv, quiz_category_csv, output_folder):
+"""def process_and_format_csv(input_csv, quiz_category_csv, output_folder):
     # CSVファイルの読み込み
     df = pd.read_csv(input_csv)
     df_quiz_category = pd.read_csv(quiz_category_csv)
@@ -130,4 +130,4 @@ def process_and_format_csv(input_csv, quiz_category_csv, output_folder):
 # 使用例
 input_conversion_csv = output_file_path # 読み取るCSVファイル名
 quiz_category_csv = "output/Quiz-Category.csv"  # クイズカテゴリファイル
-process_and_format_csv(input_conversion_csv, quiz_category_csv, output_folder)
+process_and_format_csv(input_conversion_csv, quiz_category_csv, output_folder)"""
