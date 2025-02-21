@@ -32,6 +32,6 @@ def process_quiz_data(input_file, output_file):
 
 # 実行例
 if __name__ == "__main__":
-    input_csv = "/Users/shinnosuke/Downloads/exported_results_1739928610.csv"  # 入力ファイル名を指定
-    output_csv = "/Users/shinnosuke/personality-test-conversion/output/output.csv"  # 出力ファイル名を指定
+    input_csv = "/Users/shinnosuke/Downloads/exported_results_1740114295.csv"  # 入力ファイル名を指定
+    output_csv = "/Users/shinnosuke/personality-test-conversion/output/output2.csv"  # 出力ファイル名を指定
     process_quiz_data(input_csv, output_csv)
